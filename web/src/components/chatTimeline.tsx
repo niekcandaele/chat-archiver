@@ -13,7 +13,7 @@ const ChatContainer = styled.div`
 const ChatMessage = styled.span`
   white-space: normal;
   width: 100%;
-  line-height: 0.5rem;
+  line-height: 1rem;
 `;
 
 const SideIcon = styled.div`
