@@ -4,9 +4,6 @@ import { config } from './config.js';
 
 let client
 
-console.log(config.get('elastic.cloudId'))
-console.log('jeeet')
-
 if (config.get('env') === 'production') {
   client = new Client({
     cloud: {
