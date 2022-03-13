@@ -52,9 +52,9 @@ export class Elastic {
         query: {
           multi_match: {
             query: content,
+            fuzziness: 2,
             fields: [
-              // ^3 to boost messages where main content is found
-              'content^3',
+              'content',
               'attachments'
             ],
           }
