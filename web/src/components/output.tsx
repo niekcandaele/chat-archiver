@@ -15,6 +15,13 @@ export interface IRelatedMessage {
   author: string
 }
 
+function truncateString(str: string, length: number) {
+  if (str.length > length) {
+    return str.substring(0, length) + '...';
+  }
+  return str;
+}
+
 export function Output({ data }: { data?: ISearchResult }) {
   const [relatedMessages, setRelatedMessages] = useState<{results: IRelatedMessage[]}>({results: []});
   if (!data || !data.results) {
@@ -35,7 +42,7 @@ export function Output({ data }: { data?: ISearchResult }) {
   const panels = data.results.map((result, index) => {
     return (
       <Panel
-        header={`${result.timestamp} - ${result.content}`}
+        header={truncateString(`${result.timestamp} - ${result.content}`, 150)}
         key={result.id}
       >
         <ChatTimeline data={relatedMessages.results}/>
