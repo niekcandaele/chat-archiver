@@ -1,27 +1,46 @@
 import './App.less';
 
-import { Layout } from 'antd';
-import React from 'react';
+import { HomeFilled, InfoCircleFilled } from '@ant-design/icons';
+import { Layout, Menu } from 'antd';
+import React, { useState } from 'react';
+import { Link, Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { Search } from './components/search';
+import { About } from './pages/about';
+import { Search } from './pages/search';
 
-const { Header, Content } = Layout;
+const { Header, Content, Footer } = Layout;
 
+const { SubMenu } = Menu;
 const SpaceWrapper = styled.div`
   padding: 3rem;
-`
+`;
 
 function App() {
+  const [current, setCurrent] = useState<string>("home");
+
+  const handleClick = (e: any) => {
+    console.log("click ", e);
+    setCurrent(e.key);
+  };
+
   return (
     <div className="App">
       <Layout>
-        <Header>
-          <h1>7D2D Chat archive</h1>
-        </Header>
+        <Menu onClick={handleClick} selectedKeys={[current]} mode="horizontal">
+          <Menu.Item key="home" icon={<HomeFilled />}>
+            <Link to="/">Home</Link>
+          </Menu.Item>
+          <Menu.Item key="about" icon={<InfoCircleFilled />}>
+            <Link to="/about">About</Link>
+          </Menu.Item>
+        </Menu>
         <Content>
           <SpaceWrapper>
-            <Search />
+            <Routes>
+              <Route path="/" element={<Search />} />
+              <Route path="/about" element={<About />} />
+            </Routes>
           </SpaceWrapper>
         </Content>
       </Layout>

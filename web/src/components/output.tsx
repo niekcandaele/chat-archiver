@@ -1,8 +1,8 @@
 import { Collapse } from 'antd';
 import React, { ReactElement, useState } from 'react';
 
+import { ISearchResult } from '../pages/search';
 import { ChatTimeline } from './chatTimeline';
-import { ISearchResult } from './search';
 
 const { Panel } = Collapse;
 

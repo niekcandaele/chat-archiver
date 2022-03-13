@@ -2,7 +2,7 @@ import { Input } from 'antd';
 import React, { ReactElement, useState } from 'react';
 import styled from 'styled-components';
 
-import { Output } from './output';
+import { Output } from '../components/output';
 
 const OutputContainer = styled.pre`
   padding: 4rem;
