@@ -6,8 +6,8 @@ import styled from 'styled-components';
 import { Output } from '../components/output';
 
 const OutputContainer = styled.pre`
-  padding: 4rem;
   text-align: left;
+  padding-top: 2rem;
 `
 
 export interface IMessage {
@@ -32,7 +32,12 @@ export function Search() {
 
   const onSearch = (value: React.FormEvent<HTMLInputElement>) => {
     // @ts-expect-error some type shenanigans
-    navigate(`/search/${value.target.value}`);
+    if (value.target && value.target.value) {
+      // @ts-expect-error some type shenanigans
+      navigate(`/search/${value.target.value}`);
+    } else {
+      navigate('/')
+    }
   }
 
   useEffect(() => {

@@ -79,7 +79,7 @@ export class Elastic {
       size: limit
     }
 
-    if (order === 'newer') {
+    if (order === 'older') {
       body.sort = {
         timestamp: {
           order: 'desc'

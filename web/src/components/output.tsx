@@ -42,7 +42,7 @@ export function Output({ data }: { data?: ISearchResult }) {
               self.findIndex((t) => t.id === item.id) === index
           )
           // Sort
-          .sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1));
+          .sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1));
         setRelatedMessages({ messages, main: key });
       });
   };
@@ -68,7 +68,7 @@ export function Output({ data }: { data?: ISearchResult }) {
   const panels = data.results.map((result, index) => {
     return (
       <Panel
-        header={truncateString(`${result.timestamp} - ${result.content}`, 150)}
+        header={truncateString(`${new Date(result.timestamp).toLocaleString()} - ${result.content}`, 150)}
         key={result.id}
         extra={
           <>
