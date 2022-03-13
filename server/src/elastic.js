@@ -63,35 +63,53 @@ export class Elastic {
     })
   }
 
-  static async findRelated(channelId, timestamp) {
+  static async findRelated(channelId, timestamp, order, limit = 5) {
+    const body = {
+      query: {
+        bool: {
+          must: [
+            {
+              match: {
+                channel: channelId
+              }
+            }
+          ]
+        }
+      },
+      size: limit
+    }
+
+    if (order === 'newer') {
+      body.sort = {
+        timestamp: {
+          order: 'desc'
+        }
+      }
+      body.query.bool.must.push({
+        range: {
+          timestamp: {
+            lte: timestamp
+          }
+        }
+      })
+    } else {
+      body.sort = {
+        timestamp: {
+          order: 'asc'
+        }
+      }
+      body.query.bool.must.push({
+        range: {
+          timestamp: {
+            gte: timestamp
+          }
+        }
+      })
+    }
+
     const response = await client.search({
       index: 'discord',
-      body: {
-        query: {
-          bool: {
-            must: [
-              {
-                match: {
-                  channel: channelId
-                }
-              },
-              {
-                range: {
-                  timestamp: {
-                    gte: timestamp
-                  }
-                }
-              }
-            ]
-          }
-        },
-        sort: {
-          timestamp: {
-            order: 'asc'
-          }
-        },
-        size: 25
-      }
+      body
     })
     return response
   }

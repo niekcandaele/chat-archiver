@@ -15,37 +15,52 @@ function truncateString(str: string, length: number) {
 }
 
 export function Output({ data }: { data?: ISearchResult }) {
-  const [relatedMessages, setRelatedMessages] = useState<{
-    results: IMessage[];
-  }>({ results: [] });
+  const [relatedMessages, setRelatedMessages] = useState<{messages: IMessage[], main: string}>();
   if (!data || !data.results) {
     return <div>Search something first :)</div>;
   }
 
   const callback = (key: string | string[]) => {
-    if (!key) {
+    if (!key || Array.isArray(key)) {
       return;
     }
-    fetch(`/search/${key}/related`)
-      .then((res) => res.json())
-      .then((data) => setRelatedMessages(data))
-      .catch((err) => setRelatedMessages({ results: [] }));
+    Promise.all([
+      fetch(`/search/${key}/related?direction=older&limit=5`),
+      fetch(`/search/${key}/related?direction=newer&limit=20`),
+    ])
+      // Transform all to JSON
+      .then((data) =>
+        Promise.all(data.map((d) => d.json() as Promise<ISearchResult>))
+      )
+      .then((data) => {
+        const messages = data
+          // Flatten
+          .reduce((acc, cur) => acc.concat(cur.results), [] as IMessage[])
+          // Only uniques
+          .filter(
+            (item, index, self) =>
+              self.findIndex((t) => t.id === item.id) === index
+          )
+          // Sort
+          .sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1));
+        setRelatedMessages({ messages, main: key });
+      });
   };
 
   const handleType = (result: IMessage) => {
     if (result.type === "message") {
       return (
-          <Tooltip title="Plain chat message">
-            <MessageOutlined />
-          </Tooltip>
+        <Tooltip title="Plain chat message">
+          <MessageOutlined />
+        </Tooltip>
       );
     }
 
     if (result.type === "messageWithAttachments") {
       return (
-          <Tooltip title="Message has attachments, the contents of those attachments are not shown for privacy reasons but the conversation is still here">
-            <PaperClipOutlined />
-          </Tooltip>
+        <Tooltip title="Message has attachments, the contents of those attachments are not shown for privacy reasons but the conversation is still here">
+          <PaperClipOutlined />
+        </Tooltip>
       );
     }
   };
@@ -64,7 +79,7 @@ export function Output({ data }: { data?: ISearchResult }) {
           </>
         }
       >
-        <ChatTimeline data={relatedMessages.results} />
+        <ChatTimeline data={relatedMessages} />
       </Panel>
     );
   });

@@ -8,6 +8,19 @@ export const searchRouter = Router();
 
 searchRouter.get('/:id/related', asyncRoute(async (req, res) => {
   const { id } = req.params;
+  const { direction, limit = 5 } = req.query;
+
+  if (limit > 25) {
+    return res.status(400).send({
+      error: 'limit must be less than 25'
+    });
+  }
+
+  if (direction !== 'older' && direction !== 'newer') {
+    return res.status(400).send({
+      error: 'order must be older or newer'
+    });
+  }
 
   if (!id) {
     return res.status(400).send({
@@ -16,7 +29,7 @@ searchRouter.get('/:id/related', asyncRoute(async (req, res) => {
   }
 
   const message = await Elastic.getOne(id);
-  const related = await Elastic.findRelated(message.channel, message.timestamp);
+  const related = await Elastic.findRelated(message.channel, message.timestamp, direction, limit);
 
   res.json({
     results: formatElasticToHttp(related)
