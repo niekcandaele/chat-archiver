@@ -67,7 +67,7 @@ export function About() {
       <h2>By the power of GDPR I compel you to delete my data !!</h2>
 
       <p>
-        Alright, send Catalysm a message and we'll make it happen :). 
+        Alright, send Catalysm a message and we'll figure something out. 
       </p>
 
       <hr />
