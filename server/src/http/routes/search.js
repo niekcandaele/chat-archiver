@@ -42,3 +42,11 @@ searchRouter.get('/', asyncRoute(async (req, res) => {
   });
 }))
 
+
+searchRouter.get('/stats', asyncRoute(async (req, res) => {
+  const stats = await Elastic.getStats();
+
+  res.json({
+    stats
+  });
+}))

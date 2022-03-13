@@ -1,4 +1,5 @@
-import React, { ReactElement, useState } from 'react';
+import { Statistic } from 'antd';
+import React, { ReactElement, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 const AboutDiv = styled.div`
@@ -6,6 +7,15 @@ const AboutDiv = styled.div`
 `
 
 export function About() {
+  const [stats, setStats] = useState<{total: number}>({total: 0})
+
+  useEffect(() => {
+    fetch('/search/stats')
+      .then(res => res.json())
+      .then(({stats}) => setStats(stats))
+      .catch(err => setStats({total: 0}))
+  }, [])
+
   return (
     <AboutDiv>
       <h1>Chat archive and search engine</h1>
@@ -59,6 +69,10 @@ export function About() {
       <p>
         Alright, send Catalysm a message and we'll make it happen :). 
       </p>
+
+      <hr />
+
+      <Statistic title="Total chat messages" value={stats.total} />
 
     </AboutDiv>
   );

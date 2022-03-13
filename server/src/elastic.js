@@ -119,4 +119,12 @@ export class Elastic {
     }
   }
 
+  static async getStats() {
+    const response = await client.indices.stats()
+
+    const { docs } = response.indices.discord.total
+
+    return { total: docs.count };
+  }
+
 }

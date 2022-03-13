@@ -9,9 +9,8 @@ import styled from 'styled-components';
 import { About } from './pages/about';
 import { Search } from './pages/search';
 
-const { Header, Content, Footer } = Layout;
+const { Content } = Layout;
 
-const { SubMenu } = Menu;
 const SpaceWrapper = styled.div`
   padding: 3rem;
 `;
@@ -35,6 +34,7 @@ function App() {
             <Link to="/about">About</Link>
           </Menu.Item>
         </Menu>
+          
         <Content>
           <SpaceWrapper>
             <Routes>
