@@ -10,9 +10,19 @@ const OutputContainer = styled.pre`
   text-align: left;
 `
 
+export interface IMessage {
+  id: string,
+  timestamp: string,
+  content: string,
+  score: number,
+  channel: string,
+  author: string,
+  type: 'message' | 'messageWithAttachments'
+}
+
 export interface ISearchResult {
   score: number,
-  results: Record<string,any>[]
+  results: IMessage[]
 }
 
 export function Search() {
@@ -33,7 +43,7 @@ export function Search() {
     fetch(`/search?query=${query}`)
       .then(res => res.json())
       .then(data => setResult(data))
-      .catch(err => setResult({score: 0, results: [{error: err.message}]}))
+      .catch(console.error)
   }, [query])
 
   const debounce = (func: Function, wait: number) => {

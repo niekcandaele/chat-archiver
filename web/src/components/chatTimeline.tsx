@@ -1,7 +1,8 @@
 import React, { ReactElement, useState } from 'react';
 import styled from 'styled-components';
 
-import { IRelatedMessage } from './output';
+import { IMessage } from '../pages/search';
+
 
 const ChatContainer = styled.div`
   word-wrap: break-word;
@@ -13,7 +14,7 @@ const ChatMessage = styled.p`
 `;
 
 
-export function ChatTimeline({ data }: { data?: IRelatedMessage[] }) {
+export function ChatTimeline({ data }: { data?: IMessage[] }) {
   if (!data) {
     return <div>Loading..</div>;
   }

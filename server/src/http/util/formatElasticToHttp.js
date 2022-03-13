@@ -5,6 +5,7 @@ export function formatElasticToHttp(data) {
     channel: e.message.channel,
     author: e.message.author,
     score: e.score,
+    type: e.message.type,
     id: e.id,
   }))
 }

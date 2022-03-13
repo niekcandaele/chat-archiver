@@ -65,6 +65,12 @@ function getConfig() {
         format: Array,
         default: [],
         env: 'DISCORDBOTCHANNELS'
+      },
+      maxAttachmentSize: {
+        doc: 'Maximum attachment size in bytes',
+        format: 'integer',
+        default: 1000000,
+        env: 'MAX_ATTACHMENT_SIZE'
       }
     },
 

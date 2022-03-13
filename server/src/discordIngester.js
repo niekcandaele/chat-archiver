@@ -1,3 +1,4 @@
+import axios from 'axios';
 import hasha from 'hasha';
 
 import { config } from './config.js';
@@ -64,6 +65,36 @@ export class DiscordIngester {
     clearInterval(this.interval);
   }
 
+  async _downloadFile(url) {
+    return axios({
+      url: url,
+      method: 'GET',
+      responseType: 'blob',
+    }).then((response) => {
+      return response.data
+    });
+  }
+
+  async getAttachments(message) {
+    const { attachments } = message;
+
+    const results = await Promise.all(Array.from(attachments.values()).map(async (attachment) => {
+      if (!attachment.contentType || !attachment.contentType.includes('text/plain')) {
+        console.log(`Content type ${attachment.contentType} is not text/plain, skipping`)
+        return null
+      }
+
+      if (attachment.size > config.get('discord.maxAttachmentSize')) {
+        console.log(`Attachment is larger (${attachment.size}) than maxAttachmentSize (${config.get('maxAttachmentSize')}), skipping`)
+        return null
+      }
+
+      return this._downloadFile(attachment.url);
+    }))
+
+    return results.filter(Boolean)
+  }
+
   async intervalFunc() {
     try {
       let messages = [];
@@ -76,16 +107,20 @@ export class DiscordIngester {
       }
 
       const results = await Promise.all(Array.from(messages.values()).map(async (message) => {
-        if (!message.content) {
+        if (!message.content && message.attachments.size === 0) {
           // Nothing in the message, so nothing to save
           return;
         }
-        await Elastic.write({
+
+        const attachments = await this.getAttachments(message);
+        const type = attachments.length > 0 ? 'messageWithAttachments' : 'message';
+        await Elastic.write(type, {
           content: message.cleanContent ? message.cleanContent : message.content,
           author: hasha(message.author.id),
           channel: message.channel.id,
           timestamp: message.createdAt,
           discordId: message.id,
+          attachments
         });
         return message
       }))

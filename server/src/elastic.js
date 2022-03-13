@@ -27,11 +27,11 @@ if (config.get('env') === 'production') {
 
 export class Elastic {
 
-  static async write(data) {
+  static async write(type, data) {
     return client.index({
       index: 'discord',
       document: {
-        type: 'message',
+        type,
         ...data,
       }
     })
@@ -41,9 +41,22 @@ export class Elastic {
     return client.search({
       index: 'discord',
       body: {
+        sort: [
+          "_score",
+          {
+            timestamp: {
+              order: 'desc'
+            }
+          },
+        ],
         query: {
-          match: {
-            content
+          multi_match: {
+            query: content,
+            fields: [
+              // ^3 to boost messages where main content is found
+              'content^3',
+              'attachments'
+            ],
           }
         }
       }
