@@ -29,7 +29,6 @@ export function Output({ data }: { data?: ISearchResult }) {
   }
 
   const callback = (key: string | string[]) => {
-    console.log(key)
     if (!key) {
       return;
     }
