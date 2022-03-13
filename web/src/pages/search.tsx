@@ -1,5 +1,6 @@
 import { Input } from 'antd';
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { Output } from '../components/output';
@@ -15,15 +16,25 @@ export interface ISearchResult {
 }
 
 export function Search() {
+  const navigate = useNavigate();
+  const { query } = useParams();
   const [result, setResult] = useState<ISearchResult>();
 
   const onSearch = (value: React.FormEvent<HTMLInputElement>) => {
-    // @ts-expect-error Some types are missing
-    fetch(`/search?query=${value.target.value}`)
-    .then(res => res.json())
-    .then(data => setResult(data))
-    .catch(err => setResult({score: 0, results: [{error: err.message}]}))
+    // @ts-expect-error some type shenanigans
+    navigate(`/search/${value.target.value}`);
   }
+
+  useEffect(() => {
+    if(!query) {
+      return;
+    }      
+
+    fetch(`/search?query=${query}`)
+      .then(res => res.json())
+      .then(data => setResult(data))
+      .catch(err => setResult({score: 0, results: [{error: err.message}]}))
+  }, [query])
 
   const debounce = (func: Function, wait: number) => {
     let timeout: any;
@@ -39,7 +50,7 @@ export function Search() {
       <Input placeholder="Search query" onInput={debounce(onSearch, 1000)} />
       <OutputContainer>
         <Output data={result} />
-        </OutputContainer>
+      </OutputContainer>
     </div>
   );
 }

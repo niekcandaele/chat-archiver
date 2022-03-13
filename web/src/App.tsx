@@ -19,7 +19,6 @@ function App() {
   const [current, setCurrent] = useState<string>("home");
 
   const handleClick = (e: any) => {
-    console.log("click ", e);
     setCurrent(e.key);
   };
 
@@ -39,6 +38,7 @@ function App() {
           <SpaceWrapper>
             <Routes>
               <Route path="/" element={<Search />} />
+              <Route path="/search/:query" element={<Search />} />
               <Route path="/about" element={<About />} />
             </Routes>
           </SpaceWrapper>
