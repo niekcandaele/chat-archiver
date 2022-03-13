@@ -5,7 +5,12 @@ import { config } from './config.js';
 let readyClient = null;
 export async function getDiscordClient() {
   return new Promise((resolve, reject) => {
-    const client = new Client({ intents: [Intents.FLAGS.GUILD_MESSAGES] });
+    const client = new Client({
+      intents: [
+        Intents.FLAGS.GUILD_MESSAGES,
+        Intents.FLAGS.GUILDS,
+      ]
+    });
 
     if (readyClient) {
       return resolve(readyClient)

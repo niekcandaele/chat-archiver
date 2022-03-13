@@ -70,7 +70,7 @@ export class Elastic {
           must: [
             {
               match: {
-                channel: channelId
+                channelId
               }
             }
           ]
@@ -139,7 +139,7 @@ export class Elastic {
     if (channelId) {
       body.query = {
         match: {
-          channel: channelId
+          channelId
         }
       }
     }

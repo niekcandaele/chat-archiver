@@ -117,9 +117,13 @@ export class DiscordIngester {
         await Elastic.write(type, {
           content: message.cleanContent ? message.cleanContent : message.content,
           author: hasha(message.author.id),
-          channel: message.channel.id,
           timestamp: message.createdAt,
           discordId: message.id,
+          channelId: message.channel.id,
+          channelName: message.channel.name,
+          guildId: message.guild.id,
+          guildName: message.guild.name,
+          isBot: message.author.bot,
           attachments
         });
         return message

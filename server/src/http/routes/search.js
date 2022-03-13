@@ -29,7 +29,7 @@ searchRouter.get('/:id/related', asyncRoute(async (req, res) => {
   }
 
   const message = await Elastic.getOne(id);
-  const related = await Elastic.findRelated(message.channel, message.timestamp, direction, limit);
+  const related = await Elastic.findRelated(message.channelId, message.timestamp, direction, limit);
 
   res.json({
     results: formatElasticToHttp(related)
