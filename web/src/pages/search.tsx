@@ -29,7 +29,6 @@ export function Search() {
     let timeout: any;
     return (...args: any[]) => {
       clearTimeout(timeout);
-      console.log('hier')
       timeout = setTimeout(() => func(...args), wait);
     }
   }
