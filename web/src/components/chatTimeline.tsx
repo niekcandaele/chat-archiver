@@ -8,17 +8,26 @@ import { IMessage } from '../pages/search';
 const ChatContainer = styled.div`
   word-wrap: break-word;
   display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const ChatMessage = styled.span`
   white-space: normal;
   width: 100%;
   line-height: 1rem;
+  margin-top: 0.3rem;
+`;
+
+const ChatLine = styled.p`
+  margin-bottom: 0;
 `;
 
 const SideIcon = styled.div`
   width: 2.5rem;
+  height: 100%;
   display: inline-block;
+  text-align: center;
 `;
 
 export function ChatTimeline({
@@ -89,7 +98,11 @@ export function ChatTimeline({
     return (
       <ChatContainer>
         {sideIcons}
-        <ChatMessage>{item.content.split('\n').map(c => <p>{c}</p>)}</ChatMessage>
+        <ChatMessage>
+          {item.content.split("\n").map((c) => (
+            <ChatLine>{c}</ChatLine>
+          ))}
+        </ChatMessage>
       </ChatContainer>
     );
   });
