@@ -96,21 +96,26 @@ export class Elastic {
       throw new Error('order must be asc or desc')
     }
 
+    const body = {
+      size: 1,
+      sort: {
+        timestamp: {
+          order: order === 'asc' ? 'desc' : 'asc'
+        }
+      },
+    }
+
+    if (channelId) {
+      body.query = {
+        match: {
+          channel: channelId
+        }
+      }
+    }
+
     const response = await client.search({
       index: 'discord',
-      body: {
-        query: {
-          match: {
-            channel: channelId
-          }
-        },
-        sort: {
-          timestamp: {
-            order: order === 'asc' ? 'desc' : 'asc'
-          }
-        },
-        size: 1
-      }
+      body
     })
     if (response.hits.hits[0]) {
       return response.hits.hits[0]._source
@@ -124,7 +129,15 @@ export class Elastic {
 
     const { docs } = response.indices.discord.total
 
-    return { total: docs.count };
+    const oldest = await this.getOneBasedOnTimestamp(null, 'desc')
+    const newest = await this.getOneBasedOnTimestamp(null, 'asc')
+
+    return {
+      total: docs.count,
+      channels: config.get('discord.channels').length,
+      oldest: oldest ? oldest.timestamp : null,
+      newest: newest ? newest.timestamp : null,
+    };
   }
 
 }
