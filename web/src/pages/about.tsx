@@ -54,6 +54,21 @@ export function About() {
         </a>
       </p>
 
+      <h2>How does it work?</h2>
+
+      <p>
+        The application continually scrapes messages from live chat channels and
+        indexes everything in{" "}
+        <a
+          href="https://www.elastic.co/elasticsearch/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Elasticsearch
+        </a>
+        .
+      </p>
+
       <h2>Is this only for CSMM?</h2>
 
       <p>
@@ -68,20 +83,19 @@ export function About() {
 
       <p>
         This application is very specific in what messages it scrapes. Only
-        public support channels get included, this application does not expose
-        any information that is not already exposed. The application does keep
-        track of who sent which message in order to provide a better search
-        result view (the coloured emojis in front of messages). However, the
+        public support channels get included,{" "}
+        <strong>
+          this application does not expose any information that is not already
+          exposed
+        </strong>
+        . The application does keep track of who sent which message in order to
+        provide a better user interface when viewing chat threads. However, the
         actual authors ID is <strong>NEVER</strong> stored in the database
         directly. Instead, the real ID is passed through a one-way hashing
         algorithm (SHA-512). This means it's possible to know that 2 messages
         were sent by the same user but there is no way to reconstruct the
         original authors ID.
       </p>
-
-      <h2>By the power of GDPR I compel you to delete my data !!</h2>
-
-      <p>Alright, send Catalysm a message and we'll figure something out.</p>
 
       <h2>Stats</h2>
 
@@ -96,10 +110,16 @@ export function About() {
           />
         </Col>
         <Col span={4}>
-          <Statistic title="Oldest message" value={new Date(stats.oldest).toLocaleString()} />
+          <Statistic
+            title="Oldest message"
+            value={new Date(stats.oldest).toLocaleString()}
+          />
         </Col>
         <Col span={4}>
-          <Statistic title="Newest message" value={new Date(stats.newest).toLocaleString()} />
+          <Statistic
+            title="Newest message"
+            value={new Date(stats.newest).toLocaleString()}
+          />
         </Col>
       </Row>
     </AboutDiv>
