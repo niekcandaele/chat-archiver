@@ -75,24 +75,29 @@ export class DiscordIngester {
     });
   }
 
+  _isTextAttachment(contentType) {
+    return contentType && contentType.includes('text/plain');
+  }
+
   async getAttachments(message) {
     const { attachments } = message;
 
     const results = await Promise.all(Array.from(attachments.values()).map(async (attachment) => {
-      if (!attachment.contentType || !attachment.contentType.includes('text/plain')) {
-        console.log(`Content type ${attachment.contentType} is not text/plain, skipping`)
-        return null
+      const returnValue = {
+        data: null,
+        url: attachment.url
       }
 
-      if (attachment.size > config.get('discord.maxAttachmentSize')) {
-        console.log(`Attachment is larger (${attachment.size}) than maxAttachmentSize (${config.get('maxAttachmentSize')}), skipping`)
-        return null
+      if (this._isTextAttachment(attachment.contentType)) {
+        if (attachment.size < config.get('discord.maxAttachmentSize')) {
+          returnValue.data = await this._downloadFile(attachment.url)
+        }
       }
 
-      return this._downloadFile(attachment.url);
+      return returnValue
     }))
 
-    return results.filter(Boolean)
+    return results;
   }
 
   async intervalFunc() {
