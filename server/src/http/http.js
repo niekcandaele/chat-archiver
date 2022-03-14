@@ -13,6 +13,8 @@ const __dirname = path.dirname(__filename);
 export async function getHttp() {
   return new Promise((resolve, reject) => {
     const app = express();
+    app.set('trust proxy', true)
+    app.use(express.static('public'));
 
     app.use(rateLimit({
       windowMs: 15 * 60 * 1000, // 15 minutes
@@ -20,7 +22,6 @@ export async function getHttp() {
       standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
     }))
 
-    app.use(express.static('public'));
 
     app.use('/search', searchRouter)
 
