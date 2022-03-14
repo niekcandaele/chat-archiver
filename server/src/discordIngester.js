@@ -134,7 +134,9 @@ export class DiscordIngester {
         return message
       }))
 
-      console.log(`Wrote ${results.length} messages to elastic for channel ${this.channelId}. Message timestamp: ${cursor.timestamp}`);
+      if (results.length) {
+        console.log(`Wrote ${results.length} messages for channel ${this.channel.guild.name}-${this.channel.name}. Message timestamp: ${cursor.timestamp}`);
+      }
 
       if (!results.length && this.direction === 'desc') {
         console.log(`Scraped all messages for channel ${this.channelId} in direction ${this.direction}`);
