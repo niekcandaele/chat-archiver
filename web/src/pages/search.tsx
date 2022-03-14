@@ -8,21 +8,27 @@ import { Output } from '../components/output';
 const OutputContainer = styled.pre`
   text-align: left;
   padding-top: 2rem;
-`
+`;
 
 export interface IMessage {
-  id: string,
-  timestamp: string,
-  content: string,
-  score: number,
-  channel: string,
-  author: string,
-  type: 'message' | 'messageWithAttachments'
+  id: string;
+  timestamp: string;
+  content: string;
+  score: number;
+  channel: string;
+  author: string;
+  type: "message" | "messageWithAttachments";
+  attachments: IAttachment[];
+}
+
+export interface IAttachment {
+  data: string;
+  url: string;
 }
 
 export interface ISearchResult {
-  score: number,
-  results: IMessage[]
+  score: number;
+  results: IMessage[];
 }
 
 export function Search() {
@@ -36,32 +42,31 @@ export function Search() {
       // @ts-expect-error some type shenanigans
       navigate(`/search/${value.target.value}`);
     } else {
-      navigate('/')
+      navigate("/");
     }
-  }
+  };
 
   useEffect(() => {
-    if(!query) {
+    if (!query) {
       return;
-    }      
+    }
 
     fetch(`/search?query=${query}`)
-      .then(res => res.json())
-      .then(data => setResult(data))
-      .catch(console.error)
-  }, [query])
+      .then((res) => res.json())
+      .then((data) => setResult(data))
+      .catch(console.error);
+  }, [query]);
 
   const debounce = (func: Function, wait: number) => {
     let timeout: any;
     return (...args: any[]) => {
       clearTimeout(timeout);
       timeout = setTimeout(() => func(...args), wait);
-    }
-  }
-
+    };
+  };
 
   return (
-    <div >
+    <div>
       <Input placeholder="Search query" onInput={debounce(onSearch, 1000)} />
       <OutputContainer>
         <Output data={result} />
@@ -69,5 +74,3 @@ export function Search() {
     </div>
   );
 }
-
-

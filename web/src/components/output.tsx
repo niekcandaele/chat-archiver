@@ -58,7 +58,7 @@ export function Output({ data }: { data?: ISearchResult }) {
 
     if (result.type === "messageWithAttachments") {
       return (
-        <Tooltip title="Message has attachments, the contents of those attachments are not shown for privacy reasons but the conversation is still here">
+        <Tooltip title="Message has attachments">
           <PaperClipOutlined />
         </Tooltip>
       );

@@ -4,6 +4,7 @@ import React, { ReactElement, useState } from 'react';
 import styled from 'styled-components';
 
 import { IMessage } from '../pages/search';
+import { ChatMessage } from './chatMessage';
 
 const ChatContainer = styled.div`
   word-wrap: break-word;
@@ -12,16 +13,6 @@ const ChatContainer = styled.div`
   justify-content: center;
 `;
 
-const ChatMessage = styled.span`
-  white-space: normal;
-  width: 100%;
-  line-height: 1rem;
-  margin-top: 0.3rem;
-`;
-
-const ChatLine = styled.p`
-  margin-bottom: 0;
-`;
 
 const SideIcon = styled.div`
   width: 2.5rem;
@@ -57,6 +48,7 @@ export function ChatTimeline({
   ];
 
   const items = data.messages.map((item, index) => {
+    console.log(item)
     // If we haven't seen this author before, assign a random colour
     // But prevent duplicate colours
     if (!authorToColour[item.author] && emojiColourCircles.length) {
@@ -72,12 +64,6 @@ export function ChatTimeline({
     }
 
     if (index) {
-      console.log(item.timestamp);
-      console.log(data.messages[index - 1].timestamp);
-      console.log(
-        new Date(item.timestamp).valueOf() -
-          new Date(data.messages[index - 1].timestamp).valueOf()
-      );
       sideIcons.push(
         <Tooltip title={new Date(item.timestamp).toLocaleString()}>
           <SideIcon>
@@ -98,11 +84,7 @@ export function ChatTimeline({
     return (
       <ChatContainer>
         {sideIcons}
-        <ChatMessage>
-          {item.content.split("\n").map((c) => (
-            <ChatLine>{c}</ChatLine>
-          ))}
-        </ChatMessage>
+        <ChatMessage message={item}/>
       </ChatContainer>
     );
   });
