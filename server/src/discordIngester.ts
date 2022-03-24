@@ -33,23 +33,12 @@ export class DiscordIngester {
     let messageId = null;
     let timestamp = null;
 
-    try {
-      const cursorInElastic = await Elastic.getOneBasedOnTimestamp(this.channelId, this.direction);
-      if (cursorInElastic) {
-        messageId = cursorInElastic.discordId;
-        timestamp = new Date(cursorInElastic.timestamp);
-      }
-
-    } catch (error) {
-      if (error.message.includes(`index_not_found_exception`)) {
-        console.log(`New install, no data in Elastic found. Falling back to Discord for init`);
-
-      } else if (error.message.includes(`No mapping found for [timestamp]`)) {
-        console.log(`No documents in Elastic found. Falling back to Discord for init`);
-      } else {
-        throw error
-      }
+    const cursorInElastic = await Elastic.getOneBasedOnTimestamp(this.channelId, this.direction);
+    if (cursorInElastic) {
+      messageId = cursorInElastic.discordId;
+      timestamp = new Date(cursorInElastic.timestamp);
     }
+
 
     if (!messageId) {
       console.log(`Elastic has no messages for channel ${this.channelId}, fetching from Discord instead`)
