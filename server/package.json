@@ -22,6 +22,8 @@
     "hasha": "^5.2.2"
   },
   "devDependencies": {
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "ts-migrate": "^0.1.28",
+    "typescript": "^4.6.2"
   }
 }
