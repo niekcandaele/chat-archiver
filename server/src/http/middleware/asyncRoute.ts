@@ -1,5 +1,5 @@
-export function asyncRoute(fn) {
-  return async (req, res, next) => {
+export function asyncRoute(fn: any) {
+  return async (req: any, res: any, next: any) => {
     try {
       await fn(req, res, next);
     } catch (err) {

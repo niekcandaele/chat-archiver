@@ -2,7 +2,7 @@ import { Client } from '@elastic/elasticsearch';
 
 import { config } from './config.js';
 
-let client
+let client: any
 
 if (config.get('env') === 'production') {
   client = new Client({
@@ -27,7 +27,7 @@ if (config.get('env') === 'production') {
 
 export class Elastic {
 
-  static async write(type, data) {
+  static async write(type: any, data: any) {
     return client.index({
       index: 'discord',
       document: {
@@ -37,7 +37,9 @@ export class Elastic {
     })
   }
 
-  static async search({ content }) {
+  static async search({
+    content
+  }: any) {
     return client.search({
       index: 'discord',
       body: {
@@ -63,7 +65,7 @@ export class Elastic {
     })
   }
 
-  static async findRelated(channelId, timestamp, order, limit = 5) {
+  static async findRelated(channelId: any, timestamp: any, order: any, limit = 5) {
     const body = {
       query: {
         bool: {
@@ -80,12 +82,14 @@ export class Elastic {
     }
 
     if (order === 'older') {
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'sort' does not exist on type '{ query: {... Remove this comment to see the full error message
       body.sort = {
         timestamp: {
           order: 'desc'
         }
       }
       body.query.bool.must.push({
+        // @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ range: { timestamp: { lte: any... Remove this comment to see the full error message
         range: {
           timestamp: {
             lte: timestamp
@@ -93,12 +97,14 @@ export class Elastic {
         }
       })
     } else {
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'sort' does not exist on type '{ query: {... Remove this comment to see the full error message
       body.sort = {
         timestamp: {
           order: 'asc'
         }
       }
       body.query.bool.must.push({
+        // @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ range: { timestamp: { gte: any... Remove this comment to see the full error message
         range: {
           timestamp: {
             gte: timestamp
@@ -114,7 +120,7 @@ export class Elastic {
     return response
   }
 
-  static async getOne(id) {
+  static async getOne(id: any) {
     const response = await client.get({
       index: 'discord',
       id
@@ -122,7 +128,7 @@ export class Elastic {
     return response._source
   }
 
-  static async getOneBasedOnTimestamp(channelId, order) {
+  static async getOneBasedOnTimestamp(channelId: any, order: any) {
     if (order !== 'asc' && order !== 'desc') {
       throw new Error('order must be asc or desc')
     }
@@ -137,6 +143,7 @@ export class Elastic {
     }
 
     if (channelId) {
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'query' does not exist on type '{ size: n... Remove this comment to see the full error message
       body.query = {
         match: {
           channelId

@@ -1,4 +1,4 @@
-export function errorHandler(err, req, res, next) {
+export function errorHandler(err: any, req: any, res: any, next: any) {
   console.error(err)
 
   if (res.headersSent) {

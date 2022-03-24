@@ -1,5 +1,10 @@
-export function formatElasticToHttp(data) {
-  return data.hits.hits.map(hit => ({ message: hit._source, score: hit._score, id: hit._id, ...hit })).map(e => ({
+export function formatElasticToHttp(data: any) {
+  return data.hits.hits.map((hit: any) => ({
+    message: hit._source,
+    score: hit._score,
+    id: hit._id,
+    ...hit
+  })).map((e: any) => ({
     content: e.message.content,
     timestamp: e.message.timestamp,
     channel: e.message.channelId,
@@ -7,6 +12,6 @@ export function formatElasticToHttp(data) {
     score: e.score,
     type: e.message.type,
     id: e.id,
-    attachments: e.message.attachments,
-  }))
+    attachments: e.message.attachments
+  }));
 }

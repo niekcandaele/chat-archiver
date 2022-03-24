@@ -2,7 +2,7 @@ import { Client, Intents } from 'discord.js';
 
 import { config } from './config.js';
 
-let readyClient = null;
+let readyClient: any = null;
 export async function getDiscordClient() {
   return new Promise((resolve, reject) => {
     const client = new Client({

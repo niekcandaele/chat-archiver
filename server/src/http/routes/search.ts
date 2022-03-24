@@ -1,3 +1,4 @@
+// @ts-expect-error ts-migrate(7016) FIXME: Could not find a declaration file for module 'expr... Remove this comment to see the full error message
 import { Router } from 'express';
 
 import { Elastic } from '../../elastic.js';
@@ -6,7 +7,7 @@ import { formatElasticToHttp } from '../util/formatElasticToHttp.js';
 
 export const searchRouter = Router();
 
-searchRouter.get('/:id/related', asyncRoute(async (req, res) => {
+searchRouter.get('/:id/related', asyncRoute(async (req: any, res: any) => {
   const { id } = req.params;
   const { direction, limit = 5 } = req.query;
 
@@ -36,7 +37,7 @@ searchRouter.get('/:id/related', asyncRoute(async (req, res) => {
   });
 }))
 
-searchRouter.get('/', asyncRoute(async (req, res) => {
+searchRouter.get('/', asyncRoute(async (req: any, res: any) => {
   const { query } = req.query;
 
   if (!query) {
@@ -56,7 +57,7 @@ searchRouter.get('/', asyncRoute(async (req, res) => {
 }))
 
 
-searchRouter.get('/stats', asyncRoute(async (req, res) => {
+searchRouter.get('/stats', asyncRoute(async (req: any, res: any) => {
   const stats = await Elastic.getStats();
 
   res.json({

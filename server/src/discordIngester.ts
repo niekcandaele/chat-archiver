@@ -6,7 +6,12 @@ import { getDiscordClient } from './discord.js';
 import { Elastic } from './elastic.js';
 
 export class DiscordIngester {
-  constructor(channelId, direction) {
+  channel: any;
+  channelId: any;
+  client: any;
+  direction: any;
+  interval: any;
+  constructor(channelId: any, direction: any) {
     if (direction !== 'asc' && direction !== 'desc') {
       throw new Error('direction must be asc or desc')
     }
@@ -65,7 +70,7 @@ export class DiscordIngester {
     clearInterval(this.interval);
   }
 
-  async _downloadFile(url) {
+  async _downloadFile(url: any) {
     return axios({
       url: url,
       method: 'GET',
@@ -75,21 +80,25 @@ export class DiscordIngester {
     });
   }
 
-  _isTextAttachment(contentType) {
+  _isTextAttachment(contentType: any) {
     return contentType && contentType.includes('text/plain');
   }
 
-  async getAttachments(message) {
+  async getAttachments(message: any) {
     const { attachments } = message;
 
     const results = await Promise.all(Array.from(attachments.values()).map(async (attachment) => {
       const returnValue = {
         data: null,
+        // @ts-expect-error ts-migrate(2571) FIXME: Object is of type 'unknown'.
         url: attachment.url
       }
 
+      // @ts-expect-error ts-migrate(2571) FIXME: Object is of type 'unknown'.
       if (this._isTextAttachment(attachment.contentType)) {
+        // @ts-expect-error ts-migrate(2571) FIXME: Object is of type 'unknown'.
         if (attachment.size < config.get('discord.maxAttachmentSize')) {
+          // @ts-expect-error ts-migrate(2571) FIXME: Object is of type 'unknown'.
           returnValue.data = await this._downloadFile(attachment.url)
         }
       }
@@ -112,6 +121,7 @@ export class DiscordIngester {
       }
 
       const results = await Promise.all(Array.from(messages.values()).map(async (message) => {
+        // @ts-expect-error ts-migrate(2571) FIXME: Object is of type 'unknown'.
         if (!message.content && message.attachments.size === 0) {
           // Nothing in the message, so nothing to save
           return;
@@ -120,14 +130,23 @@ export class DiscordIngester {
         const attachments = await this.getAttachments(message);
         const type = attachments.length > 0 ? 'messageWithAttachments' : 'message';
         await Elastic.write(type, {
+          // @ts-expect-error ts-migrate(2571) FIXME: Object is of type 'unknown'.
           content: message.cleanContent ? message.cleanContent : message.content,
+          // @ts-expect-error ts-migrate(2571) FIXME: Object is of type 'unknown'.
           author: hasha(message.author.id),
+          // @ts-expect-error ts-migrate(2571) FIXME: Object is of type 'unknown'.
           timestamp: message.createdAt,
+          // @ts-expect-error ts-migrate(2571) FIXME: Object is of type 'unknown'.
           discordId: message.id,
+          // @ts-expect-error ts-migrate(2571) FIXME: Object is of type 'unknown'.
           channelId: message.channel.id,
+          // @ts-expect-error ts-migrate(2571) FIXME: Object is of type 'unknown'.
           channelName: message.channel.name,
+          // @ts-expect-error ts-migrate(2571) FIXME: Object is of type 'unknown'.
           guildId: message.guild.id,
+          // @ts-expect-error ts-migrate(2571) FIXME: Object is of type 'unknown'.
           guildName: message.guild.name,
+          // @ts-expect-error ts-migrate(2571) FIXME: Object is of type 'unknown'.
           isBot: message.author.bot,
           attachments
         });

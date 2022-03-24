@@ -1,3 +1,4 @@
+// @ts-expect-error ts-migrate(7016) FIXME: Could not find a declaration file for module 'expr... Remove this comment to see the full error message
 import express from 'express';
 import rateLimit from 'express-rate-limit';
 import path from 'path';
@@ -7,6 +8,7 @@ import { config } from '../config.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { searchRouter } from './routes/search.js';
 
+// @ts-expect-error ts-migrate(1343) FIXME: The 'import.meta' meta-property is only allowed wh... Remove this comment to see the full error message
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -27,7 +29,7 @@ export async function getHttp() {
 
     app.use(errorHandler)
 
-    app.get('*', (req, res) => {
+    app.get('*', (req: any, res: any) => {
       res.sendFile(path.join(__dirname + '/../../public/index.html'));
     });
 
@@ -35,5 +37,5 @@ export async function getHttp() {
       console.log('HTTP server listening on port ' + config.get('http.port'));
       resolve(app);
     })
-  })
+  });
 }
