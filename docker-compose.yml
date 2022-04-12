@@ -10,3 +10,9 @@ services:
       - ./data/data.ms:/data.ms
     env_file:
       - server/.env
+  chat-archiver:
+    build: .
+    ports:
+      - 8080:8080
+    env_file:
+      - server/.env
