@@ -18,11 +18,14 @@ FROM node:16-alpine as backend-build
 WORKDIR /app
 
 COPY server/package*.json /app/
+COPY server/tsconfig.json /app/
 
 RUN npm ci
 
 COPY server/src /app/src
-COPY server/index.js /app/index.js
+COPY server/index.ts /app/index.ts
+
+RUN npm run build
 
 COPY --from=frontend-build /app/build /app/public
 

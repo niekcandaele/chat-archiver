@@ -1,5 +1,5 @@
-import { MessageOutlined, PaperClipOutlined } from '@ant-design/icons';
-import { Collapse, Tag, Tooltip } from 'antd';
+import { MessageOutlined } from '@ant-design/icons';
+import { Collapse, Tooltip } from 'antd';
 import React, { ReactElement, useState } from 'react';
 
 import { IMessage, ISearchResult } from '../pages/search';
@@ -25,8 +25,7 @@ export function Output({ data }: { data?: ISearchResult }) {
       return;
     }
     Promise.all([
-      fetch(`/search/${key}/related?direction=older&limit=5`),
-      fetch(`/search/${key}/related?direction=newer&limit=20`),
+      fetch(`/search/${key}/related`),
     ])
       // Transform all to JSON
       .then((data) =>
@@ -39,7 +38,7 @@ export function Output({ data }: { data?: ISearchResult }) {
           // Only uniques
           .filter(
             (item, index, self) =>
-              self.findIndex((t) => t.id === item.id) === index
+              self.findIndex((t) => t.uid === item.uid) === index
           )
           // Sort
           .sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1));
@@ -48,33 +47,20 @@ export function Output({ data }: { data?: ISearchResult }) {
   };
 
   const handleType = (result: IMessage) => {
-    if (result.type === "message") {
       return (
         <Tooltip title="Plain chat message">
           <MessageOutlined />
         </Tooltip>
       );
-    }
-
-    if (result.type === "messageWithAttachments") {
-      return (
-        <Tooltip title="Message has attachments">
-          <PaperClipOutlined />
-        </Tooltip>
-      );
-    }
   };
 
   const panels = data.results.map((result, index) => {
     return (
       <Panel
         header={truncateString(`${new Date(result.timestamp).toLocaleString()} - ${result.content}`, 150)}
-        key={result.id}
+        key={result.uid}
         extra={
           <>
-            <Tooltip title="Score of the result">
-              <Tag>{Math.round(result.score * 100) / 100}</Tag>
-            </Tooltip>
             {handleType(result)}
           </>
         }

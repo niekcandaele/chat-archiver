@@ -60,11 +60,11 @@ export function About() {
         The application continually scrapes messages from live chat channels and
         indexes everything in{" "}
         <a
-          href="https://www.elastic.co/elasticsearch/"
+          href="https://www.meilisearch.com/"
           target="_blank"
           rel="noreferrer"
         >
-          Elasticsearch
+          Meilisearch
         </a>
         .
       </p>

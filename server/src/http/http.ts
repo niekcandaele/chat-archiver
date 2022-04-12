@@ -1,14 +1,10 @@
 import express from 'express';
 import rateLimit from 'express-rate-limit';
 import path from 'path';
-import { fileURLToPath } from 'url';
 
-import { config } from '../config.js';
-import { errorHandler } from './middleware/errorHandler.js';
-import { searchRouter } from './routes/search.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import { config } from '../config';
+import { errorHandler } from './middleware/errorHandler';
+import { searchRouter } from './routes/search';
 
 export async function getHttp() {
   return new Promise((resolve, reject) => {
@@ -27,7 +23,7 @@ export async function getHttp() {
 
     app.use(errorHandler)
 
-    app.get('*', (req, res) => {
+    app.get('*', (req: any, res: any) => {
       res.sendFile(path.join(__dirname + '/../../public/index.html'));
     });
 
@@ -35,5 +31,5 @@ export async function getHttp() {
       console.log('HTTP server listening on port ' + config.get('http.port'));
       resolve(app);
     })
-  })
+  });
 }

@@ -1,40 +1,18 @@
 version: '2'
 
 services:
-
-  # Elasticsearch Docker Images: https://www.docker.elastic.co/
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.1.0
-    container_name: elasticsearch
-    environment:
-      - xpack.security.enabled=false
-      - discovery.type=single-node
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-      nofile:
-        soft: 65536
-        hard: 65536
-    cap_add:
-      - IPC_LOCK
-    mem_limit: 8000M 
+  meilisearch:
+    container_name: meilisearch
+    image: getmeili/meilisearch:v0.26.0
+    ports:
+      - 7700:7700
     volumes:
-      - elasticsearch-data:/usr/share/elasticsearch/data
+      - ./data/data.ms:/data.ms
+    env_file:
+      - server/.env
+  chat-archiver:
+    build: .
     ports:
-      - 9200:9200
-      - 9300:9300
-
-  kibana:
-    container_name: kibana
-    image: docker.elastic.co/kibana/kibana:8.1.0
-    environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-    ports:
-      - 5601:5601
-    depends_on:
-      - elasticsearch
-
-volumes:
-  elasticsearch-data:
-    driver: local
+      - 8080:8080
+    env_file:
+      - server/.env
