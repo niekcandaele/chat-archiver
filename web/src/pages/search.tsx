@@ -11,16 +11,16 @@ const OutputContainer = styled.pre`
 `;
 
 export interface IMessage {
-  id: string;
-  timestamp: string;
+  uid: string;
   content: string;
-  score: number;
-  channel: string;
   author: string;
-  type: "message" | "messageWithAttachments";
-  attachments: IAttachment[];
+  timestamp: number;
+  platformType: 'discord';
+  platformChannelId: string;
+  platformGuildId: string | null;
+  platformId: string;
+  attachments: IAttachment[]
 }
-
 export interface IAttachment {
   data: string;
   url: string;

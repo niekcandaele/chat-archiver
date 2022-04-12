@@ -48,7 +48,6 @@ export function ChatTimeline({
   ];
 
   const items = data.messages.map((item, index) => {
-    console.log(item)
     // If we haven't seen this author before, assign a random colour
     // But prevent duplicate colours
     if (!authorToColour[item.author] && emojiColourCircles.length) {
@@ -57,7 +56,7 @@ export function ChatTimeline({
 
     const sideIcons = [];
 
-    if (data.main === item.id) {
+    if (data.main === item.uid) {
       sideIcons.push(<SideIcon>➡️</SideIcon>);
     } else {
       sideIcons.push(<SideIcon></SideIcon>);

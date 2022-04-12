@@ -1,9 +1,9 @@
 import { Client, Intents } from 'discord.js';
 
-import { config } from './config.js';
+import { config } from './config';
 
 let readyClient: any = null;
-export async function getDiscordClient() {
+export async function getDiscordClient(): Promise<Client> {
   return new Promise((resolve, reject) => {
     const client = new Client({
       intents: [
@@ -15,6 +15,8 @@ export async function getDiscordClient() {
     if (readyClient) {
       return resolve(readyClient)
     }
+
+    console.log(`Connecting to Discord...`)
 
     client.once('ready', async () => {
       console.log('Discord bot logged in.');

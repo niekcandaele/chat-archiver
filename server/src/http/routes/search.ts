@@ -1,27 +1,12 @@
-// @ts-expect-error ts-migrate(7016) FIXME: Could not find a declaration file for module 'expr... Remove this comment to see the full error message
 import { Router } from 'express';
 
-import { Elastic } from '../../elastic.js';
-import { asyncRoute } from '../middleware/asyncRoute.js';
-import { formatElasticToHttp } from '../util/formatElasticToHttp.js';
+import { Search } from '../../service/search';
+import { asyncRoute } from '../middleware/asyncRoute';
 
 export const searchRouter = Router();
 
 searchRouter.get('/:id/related', asyncRoute(async (req: any, res: any) => {
   const { id } = req.params;
-  const { direction, limit = 5 } = req.query;
-
-  if (limit > 25) {
-    return res.status(400).send({
-      error: 'limit must be less than 25'
-    });
-  }
-
-  if (direction !== 'older' && direction !== 'newer') {
-    return res.status(400).send({
-      error: 'order must be older or newer'
-    });
-  }
 
   if (!id) {
     return res.status(400).send({
@@ -29,11 +14,11 @@ searchRouter.get('/:id/related', asyncRoute(async (req: any, res: any) => {
     });
   }
 
-  const message = await Elastic.getOne(id);
-  const related = await Elastic.findRelated(message.channelId, message.timestamp, direction, limit);
+  const message = await Search.getOne(id);
+  const related = await Search.findRelated(message.platformChannelId, message.timestamp);
 
   res.json({
-    results: formatElasticToHttp(related)
+    results: related
   });
 }))
 
@@ -46,19 +31,16 @@ searchRouter.get('/', asyncRoute(async (req: any, res: any) => {
     });
   }
 
-  const result = await Elastic.search({
-    content: query,
-  });
+  const result = await Search.search(query);
 
   res.json({
-    score: result.hits.max_score,
-    results: formatElasticToHttp(result)
+    results: result
   });
 }))
 
 
 searchRouter.get('/stats', asyncRoute(async (req: any, res: any) => {
-  const stats = await Elastic.getStats();
+  const stats = await Search.getStats();
 
   res.json({
     stats

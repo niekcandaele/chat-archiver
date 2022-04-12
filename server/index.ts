@@ -1,16 +1,11 @@
-import { config } from './src/config.js';
-import { DiscordIngester } from './src/discordIngester.js';
-import { getHttp } from './src/http/http.js';
+import { getHttp } from './src/http/http';
+import { startIngesters } from './src/service/ingesters';
+import { Search } from './src/service/search';
 
 async function main() {
+  await Search.setup();
   await getHttp();
-
-  const ascIngesters = config.get('discord.channels').map((channelId: any) => new DiscordIngester(channelId, 'asc'));
-  const descIngesters = config.get('discord.channels').map((channelId: any) => new DiscordIngester(channelId, 'desc'));
-  for (const ingester of [...ascIngesters, ...descIngesters]) {
-    await ingester.start()
-  }
-
+  await startIngesters();
 }
 
 main()

@@ -1,4 +1,3 @@
-// @ts-expect-error ts-migrate(7016) FIXME: Could not find a declaration file for module 'conv... Remove this comment to see the full error message
 import convict from 'convict';
 import * as dotenv from 'dotenv';
 
@@ -27,30 +26,18 @@ function getConfig() {
         env: 'PORT'
       }
     },
-    elastic: {
-      cloudId: {
-        doc: 'The cloud id for the Elasticsearch cluster.',
+    meilisearch: {
+      apiKey: {
+        doc: 'The api key for the Meilisearch instance.',
         format: String,
         default: '',
-        env: 'ELASTIC_CLOUD_ID'
+        env: 'MEILI_MASTER_KEY'
       },
-      node: {
-        doc: 'The node url for the Elasticsearch cluster.',
+      host: {
+        doc: 'The host for the Meilisearch instance.',
         format: String,
-        default: 'http://127.0.0.1:9200',
-        env: 'ELASTIC_NODE'
-      },
-      authUserName: {
-        doc: 'The username for the Elasticsearch cluster.',
-        format: String,
-        default: 'elastic',
-        env: 'ELASTIC_AUTH_USER_NAME'
-      },
-      authPassword: {
-        doc: 'The password for the Elasticsearch cluster.',
-        format: String,
-        default: '',
-        env: 'ELASTIC_AUTH_PASSWORD'
+        default: 'http://127.0.0.1:7700',
+        env: 'MEILI_HOST'
       },
     },
     discord: {
